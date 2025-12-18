@@ -1,0 +1,43 @@
+name: 自动部署博客
+
+on:
+  push:
+    branches:
+      - hexo-source  # 监控源码分支，只要你提交，这里就开始工作
+
+permissions:
+  contents: write    # 赋予机器人写入权限，否则无法推送网页
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 1. 检查代码
+      uses: actions/checkout@v3
+      with:
+        ref: hexo-source
+
+    - name: 2. 安装 Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: 3. 安装依赖
+      run: |
+        npm install
+        npm install -g hexo-cli
+
+    - name: 4. 生成静态网页
+      run: |
+        hexo clean
+        hexo generate
+
+    - name: 5. 部署到 main 分支
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public
+        publish_branch: main  # <--- 已修正：将生成的网页推送到 main
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
