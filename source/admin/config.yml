@@ -1,0 +1,22 @@
+backend:
+  name: git-gateway
+  branch: hexo-source  # ⚠️这里必须填你存源码的那个分支名！
+
+media_folder: source/images # 图片上传存到哪里
+public_folder: /images      # 文章里怎么引用图片
+
+# 只有这个域名才能访问后台（安全设置，可选，先注释掉方便测试）
+# site_url: https://dahuya.github.io
+
+collections:
+  - name: "posts" # 集合名称
+    label: "文章" # 显示名称
+    folder: "source/_posts" # Hexo 文章存放的真实路径
+    create: true # 允许创建新文章
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # 文件名格式
+    fields: # 文章里的字段，对应 Front-matter
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "发布时间", name: "date", widget: "datetime"}
+      - {label: "标签", name: "tags", widget: "list", required: false}
+      - {label: "封面图", name: "cover", widget: "image", required: false}
+      - {label: "内容", name: "body", widget: "markdown"}
